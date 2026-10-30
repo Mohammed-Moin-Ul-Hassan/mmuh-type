@@ -1,150 +1,59 @@
-QuickQWERTY
-===========
+Absolutely. Use **MMUH Type** as the project name and **MMUH (Modern Multifaceted Universal Hub)** as the maintainer. Replace the repository’s `README.md` with this. Keep the original `LICENCE.md` file and copyright notice in the repository; the README credits the QuickQWERTY project it’s based on.
 
-[QuickQWERTY][1] is a touch typing tutor that runs on a web browser
-with JavaScript enabled.  This software may be used to train your
-fingers to type without looking at the keys.  After completing all the
-units available in this software, one would know the location of the
-keys on the keyboard through muscle memory and would be able to
-effortlessly use the right finger for each key.
+```markdown
+# MMUH Type
 
-[![QuickQWERTY][IMG]][1]
+**A language-learning typing tutor by MMUH — Modern Multifaceted Universal Hub**
 
-[IMG]: https://susam.codeberg.page/blob/img/quickqwerty/quickqwerty-1.2.2.png
-[1]: https://susam.net/quickqwerty.html
+MMUH Type is a standalone browser-based tutor planned for **[type.mmuh.company](https://type.mmuh.company)**. It combines language practice with touch typing, helping learners build vocabulary, develop a flow of thought, and improve typing accuracy and speed.
 
+> **Project status: In development.** Features described below are planned; they are not all implemented yet.
 
-Contents
---------
+## Learning progression
 
-* [Use QuickQWERTY](#use-quickqwerty)
-* [Units](#units)
-* [5–6 split vs 6–7 split](#56-split-vs-67-split)
-* [Commands](#commands)
-* [Limitation](#limitation)
-* [Licence](#licence)
-* [Contact](#contact)
+Practice will progress from smaller language units to connected writing:
 
+1. **Vocabulary** — type useful words and learn their meanings.
+2. **Phrases** — practice common combinations of words.
+3. **Sentences** — use familiar words and phrases in context.
+4. **Short passages** — type connected text and follow an idea.
+5. **Free writing** — respond to a prompt in your own words.
 
-Use QuickQWERTY
----------------
+Exact-copy exercises can measure accuracy against the displayed text. Free-writing exercises are for expressing ideas without a fixed answer; they can measure typing speed, but do not treat different wording as incorrect.
 
-The current stable version of QuickQWERTY is available at the following links:
+## Planned experience
 
-* https://susam.net/quickqwerty.html
-* https://susam.codeberg.page/quickqwerty.html
-* https://susam.github.io/quickqwerty.html
+- A focused typing screen with a clean, minimal layout.
+- Live feedback on typing, speed, and accuracy.
+- Progression through vocabulary, phrases, sentences, and passages.
+- A separate free-writing mode for practicing thought flow.
+- English lessons initially, with room to add other languages.
+- Lesson editing through the MMUH WordPress dashboard, without changing app code for each lesson update.
+- A standalone tutor on `type.mmuh.company`; the existing `mmuh.company` WordPress site remains separate.
 
+The typing interface takes inspiration from modern typing-test experiences. MMUH Type is not affiliated with Monkeytype.
 
-Units
------
+## Open-source foundation
 
-The typing lessons available in this software are divided into units
-and sections.  Each unit introduces a new set of keys to be practiced.
-For example, the first unit trains the fingers on how to press the
-keys in the home row.  A couple of new keys are introduced with every
-new unit.
+MMUH Type is being adapted for [Cloud_Ray_Tech_Solutions), an open-source touch-typing tutor. The QuickQWERTY project is licensed under the MIT License.
 
-All units that introduce new keys have five sections:
+The original QuickQWERTY license and copyright notice are retained in this repository. MMUH Type is a separate project maintained by **MMUH — Modern Multifaceted Universal Hub**.
 
-  1. **Grip:** Getting used to the keys
-  2. **Words:** Learning to type words
-  3. **Control:** Learning to stop abruptly in the middle of words
-  4. **Sentences:** Learning to type sentences
-  5. **Test:** Testing your proficiency level in the current unit
+## Initial scope
 
-Additionally, there are two units that help you to test your
-proficiency level by typing passages chosen from popular books.
+The first version is planned to focus on English and the QWERTY keyboard layout. Additional languages and keyboard layouts may be considered later.
 
-One should move to the next lesson only after completing the current
-lesson satisfactorily.  When a lesson is completed satisfactorily, the
-software suggests you to move to the next lesson.
+## Development and deployment
 
-While typing one should look at the computer monitor only.  Fingers
-should always be placed on the home row as indicated in the first unit.
-If any key outside the home row has to be typed, one should return the
-finger to the home row immediately after striking that key.
+This project is in development. Setup, testing, and deployment instructions will be added once the MMUH Type implementation is ready.
 
+The planned tutor will be hosted separately at `type.mmuh.company`. It is not intended to replace or overwrite the main MMUH WordPress website.
 
-5–6 split vs 6–7 split
-----------------------
+## Credits
 
-There are two popular ways to type the ten number keys on the top row.
+- **MMUH — Modern Multifaceted Universal Hub:** MMUH Type project and planned language-learning adaptation.
 
-  1. In the traditional style, `1` and `2` are typed with the little
-     finger of the left hand, `6` is typed with the forefinger of the
-     left hand and `7` is typed with the forefinger of the right hand.
-     In other words, the number keys are split at 6–7 between the left
-     hand and the right hand.
+## License
 
-  1. In a non-traditional style, `1` is typed with the little finger
-     of the left hand, `2` is typed with the ring finger of the left
-     hand, `5` is typed with the forefinger of the left hand and `6`
-     is typed with the forefinger of the right hand.  Thus, the number
-     keys are split at 5–6 between the left hand and the right hand.
-
-In most keyboards, the `6` key is located closer to the `F`.  On such
-keyboards, the `6` key is more accessible to the left hand than the
-right hand.  Therefore, many people prefer the traditional style with
-6–7 split.  However, there are also many people who prefer the
-non-traditional style with 5–6 split.  Which style you choose depends
-on your taste, convenience and the kind of keyboard you have.  If you
-are confused about which style to choose, choose the traditional style
-with 6–7 split.
-
-This software supports both styles for the number keys.  In units 16–20
-which introduce the number keys, a link appears below the practice area
-to switch between the two styles.
-
-
-Commands
---------
-
-At any point while typing in the input box, you can type an input
-command.  The following is a list of the supported commands along with a
-description of what each command does.
-
-* `restart`: restart the current subunit
-* `reset`: same as the `restart` command
-* `rst`: same as the `restart` command
-* `fix`: remove errors from the input text
-* `xxx`: same as the `fix` command
-
-When you type a command in the input box, an error would be displayed
-because the software would be expecting you to type the text displayed
-above the input box instead of the command you are typing.  This is okay
-and you can ignore the error and continue to type the command.  As soon
-as you complete typing the command, your command would be executed.
-
-
-Limitation
-----------
-
-QuickQWERTY, as the name indicates, teaches touch typing with the
-QWERTY layout only.  Other keyboard layouts are not supported.
-
-However, QuickQWERTY is available under the terms of the MIT licence.
-Motivated individuals may modify the tool to support another keyboard
-layout by editing the lessons defined in `const UNITS` in
-[quickqwerty.html](quickqwerty.html).
-
-
-Licence
--------
-
-This is free and open source software.  You can use, copy, modify,
-merge, publish, distribute, sublicence and/or sell copies of it, under
-the terms of the MIT Licence.  See [LICENCE.md][L] for details.
-
-This software is provided "AS IS", WITHOUT WARRANTY OF ANY KIND,
-express or implied.  See [LICENCE.md][L] for details.
-
-[L]: LICENCE.md
-
-
-Contact
--------
-
-To report bugs or ask questions, [create issues][ISSUES].
-
-[ISSUES]: https://codeberg.org/susam/quickqwerty/issues
+The original QuickQWERTY software is distributed under the MIT License. See the retained `LICENCE.md` file for the license terms and notice.
+```
