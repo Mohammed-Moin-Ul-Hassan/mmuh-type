@@ -7,189 +7,369 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>QuickQWERTY - Touch Typing Tutor</title>
+    <title>Cloud Ray Tech Tutor by MMUH</title>
     <meta charset="UTF-8">
-    <meta name="application-name" content="QuickQWERTY">
-    <meta name="author" content="Susam Pal">
-    <meta name="description" content="A QWERTY touch typing tutor that runs in web browser.">
+    <meta name="application-name" content="Cloud Ray Tech Tutor by MMUH">
+    <meta name="author" content="MMUH">
+    <meta name="description" content="A polished typing-test experience for MMUH passage practice.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
+      :root {
+        --bg: #0b1020;
+        --bg-soft: #121b2d;
+        --panel: #f5f7fb;
+        --panel-strong: #ffffff;
+        --ink: #182233;
+        --muted: #54657c;
+        --line: #dfe7f2;
+        --accent: #2867ff;
+        --accent-strong: #1747c7;
+        --success: #1ca25a;
+        --warning: #d98d00;
+        --error: #d63a3a;
+        --shadow: 0 18px 46px rgba(12, 18, 33, 0.18);
+      }
+
+      * { box-sizing: border-box; }
+
+      html, body {
+        margin: 0;
+        min-height: 100%;
+        background: linear-gradient(180deg, #0b1020 0%, #0f1730 100%);
+        color: var(--ink);
+        font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      }
+
       body {
-        background: #305;
-        color: #333;
-        font-family: helvetica, arial, sans-serif;
         line-height: 1.5;
-        margin: 0;
-        min-width: 82em;
       }
-      a:link, a:visited { color: #00e }
-      a:hover { color: #03f }
-      a:active { color: #a00 }
-      header, header a:link, header a:visited { color: #eee }
-      header a:focus, header a:hover, header a:active { color: #fff }
-      header a { text-decoration: none }
-      main {
-        background: #fff;
-        padding: 2em;
-      }
-      kbd {
-        font-family: monospace,monospace;
-        border: thin solid #999;
-        box-shadow: 0 0.15em 0.15em #ccc;
-        border-radius: 0.2em;
-        padding: 0.1em 0.25em;
-      }
-      dialog {
-        max-width: 40em;
-        padding: 2em;
-      }
-      dialog h3 {
-        margin-top: 0;
-        text-align: center;
-      }
-      dialog div {
-        text-align: justify;
-      }
-      dialog button {
-        box-sizing: border-box;
-        font-size: large;
-        margin-right: 0.5em;
-        padding: 0.25em 1em;
-        min-width: 5em;
-      }
-      dialog button:last-child { margin-right: 0 }
-      dialog::backdrop {
-        background: #000;
-        opacity: 0.7;
-      }
-      #noscript { text-align: center }
-      noscript {
-        border: thick double #c00;
-        color: #c00;
-        display: inline-block;
-        font-size: x-large;
-        padding: 1em;
-        margin: 0 auto;
-      }
+
+      a:link, a:visited { color: #1e52d9; }
+      a:hover { color: #163db0; }
+      a:active { color: #9d1d22; }
+
       header {
-        line-height: 2.5;
-        padding: 0 2em;
+        color: #edf3ff;
+        background: rgba(10, 17, 30, 0.72);
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        backdrop-filter: blur(8px);
       }
-      header h1, header h2 {
-        display: inline-block;
-        font-size: 2em;
-        margin: 0;
-        white-space: pre;
+
+      .brand-wrap {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1.1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
       }
-      header h1, #unitLinks {
-        vertical-align: top;
-        width: 20rem;
+
+      .brand {
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        font-size: clamp(1.25rem, 1.8vw, 2rem);
       }
-      header h2, #practiceArea {
-        box-sizing: border-box;
-        display: inline-block;
-        min-width: 42rem;
-        padding: 0 1em;
-        text-align: center;
-        vertical-align: top;
-        width: calc(100% - 40rem);
+
+      .brand small {
+        display: block;
+        font-size: 0.68rem;
+        opacity: 0.75;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
       }
-      #unitLinks, #practiceArea { display: none }
+
+      .top-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+      }
+
+      .chip {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: inherit;
+        border-radius: 999px;
+        padding: 0.45rem 0.85rem;
+        font-size: 0.8rem;
+      }
+
+      main {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1.5rem;
+      }
+
+      .panel {
+        background: rgba(255,255,255,0.92);
+        border: 1px solid rgba(15,23,42,0.08);
+        border-radius: 24px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .toolbar {
+        background: linear-gradient(180deg, #ffffff, #f2f5fb);
+        border-bottom: 1px solid var(--line);
+        padding: 1rem 1.25rem;
+      }
+
+      #unitLinks, #sectionLinks, #altUnitLinks {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      #sectionLinks {
+        margin-top: 0.75rem;
+      }
+
       #unitLinks div,
       #sectionLinks div,
       #altUnitLinks div {
-        background: #dce;
-        border-radius: 0.1em;
-        border: thin solid #768;
-        box-sizing: border-box;
-        padding: 0.2em 0 0.1em 0;
-        text-align: center;
+        background: #edf2ff;
+        border: 1px solid #cfe0ff;
+        border-radius: 12px;
+        min-height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem 0.75rem;
+        transition: 0.2s ease;
       }
+
       #unitLinks div.selected,
       #sectionLinks div.selected,
       #altUnitLinks div.selected {
-        background: #dff;
-        border: 1px solid #699;
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
       }
-      #unitLinks div { margin-bottom: 0.2em }
-      #sectionLinks { display: flex; justify-content: space-between }
-      #sectionLinks div { display: inline-block }
-      #altUnitLinks div {
-        width: 8em;
-        display: inline-block;
-        margin-right: 1em;
+
+      #unitLinks a,
+      #sectionLinks a,
+      #altUnitLinks a {
+        text-decoration: none;
+        color: var(--ink);
+        font-weight: 600;
       }
-      #altUnitLinks div:last-child { margin-right: 1em }
-      #practicePane { display: inline-block }
+
+      #sectionLinks div {
+        flex: 1 1 160px;
+      }
+
+      #practiceArea {
+        padding: clamp(1rem, 2vw, 1.75rem);
+      }
+
+      #practicePane {
+        border-radius: 18px;
+        border: 1px solid var(--line);
+        background: rgba(248,250,252,0.96);
+        padding: 1rem;
+      }
+
       #target {
-        margin: 1rem 0;
-        font-family: monospace,monospace;
-        padding: 0.5rem;
-        font-size: 2.5em;
-        line-height: 1.2;
+        min-height: 200px;
+        margin: 0 0 1rem;
+        background: #f9fafc;
+        border: 2px solid rgba(24,34,51,0.12);
+        border-radius: 16px;
+        padding: 1.2rem 1rem;
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+        font-size: clamp(1.15rem, 2vw, 2.2rem);
+        line-height: 1.65;
+        letter-spacing: 0.015em;
+        white-space: pre-wrap;
+        word-break: break-word;
       }
-      #target, span.targetChar {
-        border: 0.2rem solid #333;
-        border-radius: 0.125rem;
+
+      .targetChar {
+        display: inline-block;
+        padding: 0 0.12em;
+        border-radius: 0.25em;
+        border: 2px solid #3d4c66;
+        background: rgba(40,103,255,0.08);
+        color: #0d1b2a;
       }
-      #feedback { margin-bottom: 1em }
+
+      .error #target { background: #fff3f3; }
+      .retake #target { background: #fff8eb; }
+      .success #target { background: #eefcf3; }
+
+      #feedback {
+        display: grid;
+        grid-template-columns: 1fr 1.5fr 1fr;
+        gap: 1rem;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      #report, #score {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+
+      #score {
+        text-align: right;
+      }
+
+      #status {
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--accent-strong);
+      }
+
+      .ready #status { color: var(--success); }
+      .error #status { color: var(--error); }
+      .retake #status { color: var(--warning); }
+      .success #status { color: var(--success); }
+
+      #progress {
+        display: flex;
+        flex-direction: column;
+        gap: 0.45rem;
+      }
+
+      progress {
+        width: 100%;
+        height: 12px;
+        border-radius: 999px;
+      }
+
       #input {
-        box-sizing: border-box;
+        width: 100%;
+        border: 2px solid #d9e1f0;
+        background: #fff;
+        border-radius: 14px;
+        min-height: 58px;
+        padding: 0.9rem 1rem;
         font-size: 1rem;
-        width: 100%;
+        outline: none;
+        transition: 0.18s ease;
       }
-      #altUnitLinks, #guidePane { margin-top: 1em }
-      #icon { font-family: verdana }
+
+      #input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 4px rgba(40,103,255,0.12);
+      }
+
+      .error #input { border-color: var(--error); background: #fff5f5; }
+      .retake #input { border-color: var(--warning); background: #fffaf0; }
+      .success #input { border-color: var(--success); background: #f2fdf6; }
+
+      #controlRow {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.75rem;
+        margin-top: 1rem;
+        flex-wrap: wrap;
+      }
+
+      #advice, #restart {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        border-radius: 12px;
+        border: 1px solid var(--line);
+        padding: 0.7rem 1rem;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      #advice {
+        text-decoration: none;
+        background: linear-gradient(135deg, #eef4ff, #edf7ff);
+        color: var(--ink);
+        visibility: hidden;
+      }
+
+      #restart {
+        background: #fff;
+        color: var(--ink);
+        visibility: hidden;
+      }
+
+      #guidePane {
+        padding: 1rem 1.25rem 1.5rem;
+        border-top: 1px solid var(--line);
+      }
+
+      #guideLink {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
       #guideText {
-        display: inline-block;
-        margin: 0 auto;
-        max-width: 70%;
-        text-align: justify;
+        margin-top: 0.95rem;
+        padding: 1rem 1.1rem;
+        border-radius: 14px;
+        background: linear-gradient(180deg, #f7f9ff, #eef4ff);
+        border: 1px solid var(--line);
+        color: var(--muted);
       }
-      #report, #progress, #score {
-        display: inline-block;
-        width: 33.33%;
-        vertical-align: top;
-      }
-      #report { text-align: left }
-      #status { font-weight: bold }
-      #advice, #restart { visibility: hidden }
-      #advice:focus, #restart:focus { outline: solid }
-      #score { text-align: right }
-      #progressBar {
-        box-sizing: border-box;
-        width: 100%;
-      }
-      .error #target, .error #input { background: #f99 }
-      .retake #target, .retake #input { background: #ff9 }
-      .success #target, .success #input { background: #9f9 }
-      .retake .targetChar { border-color: #ff9 }
-      .success .targetChar { border-color: #9f9 }
-      .ready #status { color: #060 }
-      .error #status { color: #c00 }
-      .retake #status { color: #630 }
-      .success #status { color: #060 }
-      .error #input { border-color: #c00 }
-      .retake #input { border-color: #990 }
-      .success #input { border-color: #090 }
+
       footer {
-        border-top: thin solid #103;
-        color: #eee;
-        padding: 1.5em;
-        text-align: center;
+        color: #eaf1ff;
+        background: rgba(10, 17, 30, 0.42);
+        border-top: 1px solid rgba(255,255,255,0.08);
       }
-      nav a {
-        margin-right: 1.5em;
-        line-height: 2.5;
+
+      .footer-wrap {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1.2rem 1.5rem 1.6rem;
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        align-items: center;
+        flex-wrap: wrap;
       }
-      nav a:last-child { margin-right: 0 }
-      footer a:link, footer a:visited { color: #bdf }
-      footer a:focus, footer a:hover { color: #bff }
-      footer a:active { color: #fcc }
+
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      footer a {
+        color: #dfeaff;
+        text-decoration: none;
+      }
+
       footer p {
-        max-width: 40em;
-        margin: 1em auto;
+        margin: 0;
+        color: rgba(223,234,255,0.88);
+      }
+
+      @media (max-width: 720px) {
+        .brand-wrap, .footer-wrap {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        #feedback {
+          grid-template-columns: 1fr;
+        }
+
+        #score {
+          text-align: left;
+        }
+
+        main {
+          padding: 1rem;
+        }
       }
     </style>
+
     <script>
       let unitLinks, sectionLinks, altUnitLinks
       let unitTitle
@@ -232,7 +412,6 @@
         try {
           window.localStorage.setItem(key, value)
         } catch (e) {
-          // Ignore storage restrictions.
         }
       }
 
@@ -259,9 +438,8 @@
         altDialog = document.getElementById('altDialog')
         altMessage = document.getElementById('altMessage')
 
-        const prevUnit = safeStorageGet('unit')
-        if (window.location.hash === '' && prevUnit !== null && prevUnit !== '#1') {
-          window.location.hash = prevUnit
+        if (window.location.hash === '' && safeStorageGet('unit') !== null && safeStorageGet('unit') !== '#1') {
+          window.location.hash = safeStorageGet('unit')
         }
 
         setupLesson()
@@ -278,8 +456,7 @@
         const alt = getAlt()
         const [unit, section] = getLesson()
 
-        if (unit > UNITS.main.length ||
-            section > Object.keys(pickUnit(unit, alt).sections).length) {
+        if (unit > UNITS.main.length || section > Object.keys(pickUnit(unit, alt).sections).length) {
           window.location.hash = '#'
           return
         }
@@ -649,10 +826,6 @@
         } else if (s.endsWith('fix') || s.endsWith('xxx')) {
           input.value = input.value.substring(0, goodChars)
           evaluate()
-        } else if (s.endsWith('test')) {
-          test()
-        } else if (s.endsWith('qtpi')) {
-          qtpi()
         }
       }
 
@@ -663,149 +836,48 @@
         }
       }
 
-      function test () {
-        function testMainLessons () {
-          let learnt = ''
-          for (let i = 1; i <= UNITS.main.length; i++) {
-            const unit = UNITS.main[i - 1]
-            learnt = learntChars(unit.title, learnt)
-            validateText(i, unit.sections, learnt)
-          }
-        }
-        function testAltLessons () {
-          let learnt = ''
-          const altStart = UNITS.altStart
-          for (let i = 1; i < altStart; i++) {
-            learnt = learntChars(UNITS.main[i - 1].title, learnt)
-          }
-          for (let i = altStart; i < altStart + UNITS.alt.length; i++) {
-            const unit = UNITS.alt[i - altStart]
-            learnt = learntChars(unit.title, learnt)
-            validateText(i, unit.sections, learnt)
-          }
-        }
-        function learntChars (newTitle, oldLearnt) {
-          if (newTitle === 'shift') {
-            return oldLearnt + oldLearnt.toUpperCase()
-          }
-          if (newTitle === 'simple passages') {
-            return oldLearnt
-          }
-          if (newTitle === 'passages') {
-            return oldLearnt + '-"()'
-          }
-          return oldLearnt + newTitle
-        }
-        function validateText (i, sections, learnt) {
-          for (const [title, text] of Object.entries(sections)) {
-            for (const c of text) {
-              if (!learnt.includes(c)) {
-                throw new Error(`Unit ${i}.${title} has invalid character: ${c}`)
-              }
-            }
-          }
-        }
-        testMainLessons()
-        testAltLessons()
-        console.log('[test] PASS')
-      }
-
-      function qtpi () {
-        function main () {
-          const pLeft = '<p style="text-align: left">'
-          const pCentre = '<p style="text-align: center">'
-          const pRight = '<p style="text-align: right">'
-          const pEnd = '</p>'
-          const letters = [
-            pLeft + 'Hello there,' + pEnd + pCentre +
-              'I <span style="color: #e28; font-size: 1.25em">&hearts;</span> your work!' +
-              pEnd + pRight + '&mdash; MMUH Type' + pEnd,
-            pLeft + 'Thank you,' + pEnd + pCentre +
-              'Your effort is meaningful and deeply appreciated.' +
-              pEnd + pRight + '&mdash; MMUH Type' + pEnd
-          ]
-          const main = document.querySelector('main')
-          const pane = document.createElement('div')
-          const box = document.createElement('div')
-          pane.style.alignItems = 'center'
-          pane.style.boxSizing = 'border-box'
-          pane.style.display = 'flex'
-          pane.style.height = 'calc(100vh - 14em)'
-          pane.style.justifyContent = 'center'
-          box.style.border = 'thick double #305'
-          box.style.color = '#305'
-          box.style.fontSize = 'xx-large'
-          box.style.padding = '0 1em'
-          box.style.minWidth = '30rem'
-          box.style.maxWidth = '40rem'
-          box.innerHTML = letters[Math.floor(Math.random() * letters.length)]
-          pane.append(box)
-          main.replaceChildren(pane)
-        }
-        main()
-      }
-
       window.addEventListener('load', init)
 
       const UNITS = {
-        mainLabel: 'MMUH Type',
-        mainConfirmMsg: '<h3>Switch lesson set?</h3><p>This will switch to the alternate phrase set for MMUH Type. Continue?</p>',
-        altConfirmMsg: '<h3>Switch lesson set?</h3><p>This will switch back to the main phrase set for MMUH Type. Continue?</p>',
-        altLabel: 'Alternate',
+        mainLabel: 'MMUH',
+        mainConfirmMsg: '<h3>Switch to the alternate lesson set?</h3><p>You are about to switch the lesson set for Cloud Ray Tech Tutor by MMUH. Continue?</p>',
+        altConfirmMsg: '<h3>Switch to the main lesson set?</h3><p>You are about to switch back to the main lesson set for Cloud Ray Tech Tutor by MMUH. Continue?</p>',
+        altLabel: 'Alt',
         altStart: 999,
         main: [
           {
-            title: 'Greetings',
-            guide: '<p>These lessons focus on natural, supportive greetings and check-ins. Keep your rhythm smooth, relaxed, and steady. Aim for clean flow rather than speed alone.</p>',
+            title: 'Greetings and Support',
+            guide: '<p>Type these useful greetings and supportive phrases.</p>',
             sections: {
-              Warmup: 'Hello there. Good morning. Welcome back. Thanks for joining me. I am glad to see you. It is nice to have you here. You are doing well. Keep it steady. Keep going. Good work. Nice to meet you.',
-              Support: 'Thank you for being here. I really appreciate your time. You are doing a good job. I am proud of your effort. You are making progress. Keep your pace relaxed. Stay calm and focused. You are improving every day.',
-              Checkin: 'How are you today? I hope your morning is going well. Are you feeling calm and steady? I am glad we get to spend time together. Let us take it one step at a time. You have been doing well. Keep going. I am here with you.'
+              Greetings: 'Hello dear. Hi there. How are you? How may I assist you? Sure, please allow me a minute to connect with the energies and get back with the insights. Thanks for waiting, dear. Thanks for the time given. Hello. How are you? Sure. I would love to help you. I am sorry to hear that. Hi there! How are you doing today? Sure, my dear. At the same time, I understand.',
+              Support: 'Please provide your name and date of birth. Please provide both of your names and date of births. Please allow me a moment here to tap into the energies and revert with the insights. Hey! How can I help you? What would you like to know? Give me a minute to connect, dear. Thanks for waiting. Thanks for the time given.',
+              Welcome: 'Welcome back, Love. Let me continue the readings from where we left off. Sure, my dear, I am all ears. I understand your curiosity, my dear. I can understand the pain and agony you are going through. Let me be honest here, my dear: this is her path and her consequence, not something you need to carry. This is his path and his consequences, not something you need to carry. Welcome again. Yes, let me continue, dear.'
             }
           },
           {
-            title: 'Support',
-            guide: '<p>These phrases are for encouragement, reassurance, and gentle conversational rhythm. The goal is natural phrasing, easy pacing, and accurate spacing.</p>',
+            title: 'Helpful Sentences',
+            guide: '<p>Practice complete sentences for clear communication.</p>',
             sections: {
-              Encouragement: 'You are doing better than you think. Keep trusting your process. Your effort matters. You are learning with each attempt. This is a good step. You can take your time. It is okay to slow down. Strong effort counts. You are making steady progress.',
-              Comfort: 'I am here with you. You do not have to rush. Breathe, settle, and begin again. It is okay to pause. You are allowed to take your time. A calm pace is a strong pace. You are safe to continue. I believe in your progress.',
-              Practice: 'Let us keep it simple. One sentence at a time. Focus on flow and accuracy. Good rhythm comes with repetition. You are learning a lot. Your confidence will grow with practice. Try again with calm focus. Strong hands, steady eyes, relaxed pace.'
+              ClientDetails: 'Hey! How can I help you? What would you like to know? Yes. Is there anything specific you want me to focus on, like career or love guidance? I am here to help you attain clarity. Your name and date of birth? Date of birth. Okay. Give me a minute to connect with the energies. Thanks for waiting, dear.',
+              CheckingIn: 'Hello. How are you doing today? I am good. He texted me this Monday, just checking in, asked how my week was, and he said his week was long and told me he took his dog out to the park. I texted him back and said good, and told him to stay warm at his work because people get sick.',
+              Patience: 'Hey friend. How are you today? Thanks for the details. I will surely check it for you. I will check this for you. Let me check this for you. Kindly allow me a moment here to tune into the energies. I appreciate your patience, dear. Hello, my dear. I am doing absolutely good; thank you for asking me.'
             }
           },
           {
-            title: 'Sessions',
-            guide: '<p>These passages are closer to real conversation flow: check-ins, session observations, and gentle pacing language. Use them to build accuracy while keeping the tone warm and natural.</p>',
+            title: 'Connection Passages',
+            guide: '<p>Type these longer passages carefully and smoothly.</p>',
             sections: {
-              Chat: 'We are here to look at your progress and build confidence together. You have been very steady today. I can see your focus improving. We can slow down when needed. Let us keep the conversation clear and kind. You are doing well, and I am glad to be with you.',
-              Session: 'This session is about ease and clarity. We can pause, breathe, and continue when ready. Your voice matters. Your pace matters. The goal is calm and steady progress. We are not trying to rush anything. We are working toward comfort and confidence.',
-              Reflection: 'I can feel the effort in your work. That effort is visible and meaningful. You are learning to trust the process. A calm rhythm helps you stay present. I appreciate the way you stay with the task. You are doing this well.'
+              Cosmos: 'As I tuned into the energies, here is what I am sensing. I see that he is safe and managing okay; the trip is busy and pulls him into family and obligations. But the quiet moments are where you surface for him, dear, and I sense you have been on his mind in a way that surprises him. This distance has not cooled what he feels; if anything, it has clarified it, because being away from you has shown him how much of his daily rhythm you had become.',
+              Reflection: 'What I do sense shifting now is a man beginning to think beyond the trip of coming back, of what he wants to build when he returns, and of you inside that picture. He will still be quiet in communication, dear, because he struggles to put this into words, but do not read his silence as fading feelings; it is him sorting himself out. My dear, I do sense that when he returns, he will try to meet you. There is a high possibility of that, and I sense it clearly.',
+              Message: 'My dear, the quote he put up, "A mind fixated on one person isolates one from the rest of the world," is incredibly telling, and it perfectly mirrors the energy I am sensing. By posting this while sending a very clear subconscious message. You are the one person his mind is fixated on. As he sits in office surrounded by strangers and heading into a completely different world, his thoughts are not on his surroundings or the work; they are completely consumed by you.'
             }
           },
           {
-            title: 'Connection',
-            guide: '<p>These passages are more personal and relational. They are useful for longer writing practice while keeping the tone gentle, warm, and expressive.</p>',
+            title: 'Long Passage Practice',
+            guide: '<p>Type the full passage without stopping. Focus on accuracy first, then speed.</p>',
             sections: {
-              WarmWords: 'I appreciate the way you show up. Your presence is comforting, thoughtful, and steady. I feel a real sense of connection when we talk. You make the space feel calm and safe. I enjoy how easy it is to be honest with you. Your attention means a lot to me.',
-              Relationship: 'I am grateful for the way you listen. The way you pay attention feels kind and sincere. I enjoy our conversations and the ease that comes with them. Your patience makes me feel understood. I value the closeness we keep building, one honest moment at a time.',
-              LongForm: 'The more I spend time with you, the more I notice how genuinely thoughtful and warm you are. You bring calm energy to every conversation, and I feel comfortable being fully present with you. Your kindness stands out, and I appreciate the way you make everything feel lighter and more honest.'
-            }
-          },
-          {
-            title: 'Passages',
-            guide: '<p>These are longer practice passages designed for sustained accuracy and rhythm. Focus on smooth flow, clear phrasing, and relaxed typing over speed.</p>',
-            sections: {
-              PassageOne: 'Today feels like a quiet turning point. I am learning to trust my pace and let my work unfold naturally. The process is not about rushing. It is about listening carefully, staying present, and making steady progress with patience and focus. That is enough for now.',
-              PassageTwo: 'I am grateful for the people who help me feel steady. Their attention, kindness, and honesty make the work feel lighter and more meaningful. I am learning that progress often comes quietly, through simple effort, thoughtful practice, and the courage to keep going when things feel uncertain.',
-              PassageThree: 'There is a deep kind of comfort in being understood without having to explain everything. It creates space to relax, breathe, and notice what matters. I want to carry that feeling forward. I want to be more gentle with myself, more patient with my process, and more open to the good things that grow from steady effort.'
-            }
-          },
-          {
-            title: 'Closing',
-            guide: '<p>These final passages are for calm, reflective endings and smoother transitions. The tone is gentle and supportive, which makes them useful for extended practice.</p>',
-            sections: {
-              CloseOne: 'Thank you for taking the time to be here with me. I appreciate the effort, the patience, and the care you bring to this space. I hope you leave feeling a little calmer, a little clearer, and a little more confident in what you have already done.',
-              CloseTwo: 'We have made real progress together, even if it feels small at times. That progress is still important. Keep noticing the moments when you improve, and trust that consistency matters more than perfection. You are doing better than you think, and I am glad to see it.',
-              CloseThree: 'Let us end on a steady note. Take a breath, feel the calm, and carry that forward into the next part of your work. You have more strength and more clarity than you may realise. Keep going with patience, kindness, and trust in yourself.'
+              Session: 'The energy surrounding your session with Marcus is incredibly warm and forward-moving. When you ask if he feels the connection and wants to see you soon, the answer is a resounding yes. Marcus is currently feeling a strong pull toward you and is actively thinking about the next time he can be in your presence. There is a sense of anticipation on his end; he genuinely enjoys your company.',
+              Clarity: 'Hi there. Alright, dear, let me check on that. Kindly allow me a moment here to tune into the energies. I appreciate your patience, dear. Dear, as I connected with Archer\'s energy over these past few days, what I pick up is a noticeable shift from that restless, internal frustration into something much more active and deliberate; the silence has begun to crack.'
             }
           }
         ],
@@ -815,49 +887,75 @@
   </head>
   <body>
     <header>
-      <h1>QuickQWERTY</h1>
-      <h2 id="unitTitle">Unit 1.1</h2>
-    </header>
-    <main>
-      <div id="unitLinks"></div>
-      <div id="sectionLinks"></div>
-      <div id="altUnitLinks"></div>
-      <div id="practiceArea">
-        <div id="practicePane" class="ready">
-          <div id="target" aria-live="polite"></div>
-          <div id="feedback">
-            <div id="report">
-              <span id="status">READY</span>
-              <span id="remark"></span>
-            </div>
-            <div id="progress">
-              <progress id="progressBar" value="0" max="100"></progress>
-              <span id="progressPercent">0%</span>
-            </div>
-            <div id="score">
-              <span id="speed">0 wpm</span>
-              <span id="error">0%</span>
-              <span id="icon">(\u0298\u203f\u0298)</span>
-            </div>
-          </div>
-          <input id="input" type="text" autocomplete="off" spellcheck="false" aria-label="Practice input">
-          <a id="advice" href="#">Try again</a>
-          <button id="restart" type="button">Restart</button>
+      <div class="brand-wrap">
+        <div class="brand">
+          Cloud Ray Tech Tutor by MMUH
+          <small>Typing Practice</small>
+        </div>
+        <div class="top-actions">
+          <span class="chip">Passage drills</span>
+          <span class="chip">Accuracy first</span>
         </div>
       </div>
-      <div id="guidePane">
-        <a id="guideLink" href="#">Guide</a>
-        <div id="guideText" style="display:none"></div>
+    </header>
+
+    <main>
+      <div class="panel">
+        <div class="toolbar">
+          <div id="unitLinks"></div>
+          <div id="sectionLinks"></div>
+          <div id="altUnitLinks" style="display:none"></div>
+        </div>
+
+        <div id="practiceArea">
+          <div id="practicePane" class="ready">
+            <div id="target" aria-live="polite"></div>
+
+            <div id="feedback">
+              <div id="report">
+                <span id="status">READY</span>
+                <span id="remark"></span>
+              </div>
+
+              <div id="progress">
+                <progress id="progressBar" max="100" value="0"></progress>
+                <span id="progressPercent">0%</span>
+              </div>
+
+              <div id="score">
+                <span id="speed">0 wpm</span>
+                <span id="error">0%</span>
+                <span id="icon">(\u0298\u203f\u0298)</span>
+              </div>
+            </div>
+
+            <input id="input" type="text" autocomplete="off" spellcheck="false" aria-label="Practice text" />
+
+            <div id="controlRow">
+              <a id="advice" href="#">Try again</a>
+              <button id="restart" type="button">Restart</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="guidePane">
+          <a id="guideLink" href="#">Guide</a>
+          <div id="guideText" style="display:none"></div>
+        </div>
       </div>
     </main>
+
     <footer>
-      <nav>
-        <a href="#">Home</a>
-        <a href="#">Lessons</a>
-        <a href="#">About</a>
-      </nav>
-      <p>MMUH Type lessons built for your own phrases, passages, and session-style practice.</p>
+      <div class="footer-wrap">
+        <nav>
+          <a href="#">Home</a>
+          <a href="#">Lessons</a>
+          <a href="#">Progress</a>
+        </nav>
+        <p>Cloud Ray Tech Tutor by MMUH</p>
+      </div>
     </footer>
+
     <dialog id="altDialog">
       <div id="altMessage"></div>
       <form method="dialog">
@@ -865,8 +963,9 @@
         <button value="no">No</button>
       </form>
     </dialog>
+
     <noscript>
-      <p id="noscript">JavaScript is required to use QuickQWERTY.</p>
+      <p id="noscript">JavaScript is required to use Cloud Ray Tech Tutor by MMUH.</p>
     </noscript>
   </body>
 </html>
