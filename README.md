@@ -32,9 +32,9 @@ The typing interface takes inspiration from modern typing-test experiences. MMUH
 
 ## Open-source foundation
 
-MMUH Type is being adapted for [Cloud_Ray_Tech_Solutions), an open-source touch-typing tutor. The QuickQWERTY project is licensed under the MIT License.
+MMUH Type is being adapted for [Cloud_Ray_Tech_Solutions), an open-source touch-typing tutor. The mmuh-type project is licensed under the MIT License.
 
-The original QuickQWERTY license and copyright notice are retained in this repository. MMUH Type is a separate project maintained by **MMUH — Modern Multifaceted Universal Hub**.
+The original license and copyright notice are retained in this repository. MMUH Type is a separate project maintained by **MMUH — Modern Multifaceted Universal Hub**.
 
 ## Initial scope
 
