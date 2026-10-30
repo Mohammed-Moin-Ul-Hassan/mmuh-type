@@ -1,23 +1,932 @@
-<!doctype html>
+===START===
+<!--
+    Cloud Ray Tech Tutor by MMUH
+    Copyright (c) MMUH — Modern Multifaceted Universal Hub
+    Based on MIT-licensed open-source typing tutor work.
+    See LICENCE.md for full license and attribution details.
+-->
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>MMUH Type</title>
-  <meta http-equiv="refresh" content="0; url=quickqwerty.html">
-  <style>
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      background: #111;
-      color: #eee;
-      font-family: system-ui, sans-serif;
-    }
-  </style>
-</head>
-<body>
-  <p>Loading MMUH Type…</p>
-</body>
+  <head>
+    <title>Cloud Ray Tech Tutor by MMUH</title>
+    <meta charset="UTF-8">
+    <meta name="application-name" content="Cloud Ray Tech Tutor by MMUH">
+    <meta name="author" content="MMUH">
+    <meta name="description" content="A polished typing-test experience for MMUH passage practice.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      :root {
+        --bg: #0b1020;
+        --bg-soft: #121b2d;
+        --panel: #f5f7fb;
+        --panel-strong: #ffffff;
+        --ink: #182233;
+        --muted: #54657c;
+        --line: #dfe7f2;
+        --accent: #2867ff;
+        --accent-strong: #1747c7;
+        --success: #1ca25a;
+        --warning: #d98d00;
+        --error: #d63a3a;
+        --shadow: 0 18px 46px rgba(12, 18, 33, 0.18);
+      }
+
+      * { box-sizing: border-box; }
+
+      html, body {
+        margin: 0;
+        min-height: 100%;
+        background: linear-gradient(180deg, #0b1020 0%, #0f1730 100%);
+        color: var(--ink);
+        font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      }
+
+      body { line-height: 1.5; }
+
+      a:link, a:visited { color: #1e52d9; }
+      a:hover { color: #163db0; }
+      a:active { color: #9d1d22; }
+
+      header {
+        color: #edf3ff;
+        background: rgba(10, 17, 30, 0.72);
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        backdrop-filter: blur(8px);
+      }
+
+      .brand-wrap {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1.1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+
+      .brand {
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        font-size: clamp(1.25rem, 1.8vw, 2rem);
+      }
+
+      .brand small {
+        display: block;
+        font-size: 0.68rem;
+        opacity: 0.75;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .top-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+      }
+
+      .chip {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: inherit;
+        border-radius: 999px;
+        padding: 0.45rem 0.85rem;
+        font-size: 0.8rem;
+      }
+
+      main {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1.5rem;
+      }
+
+      .panel {
+        background: rgba(255,255,255,0.92);
+        border: 1px solid rgba(15,23,42,0.08);
+        border-radius: 24px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .toolbar {
+        background: linear-gradient(180deg, #ffffff, #f2f5fb);
+        border-bottom: 1px solid var(--line);
+        padding: 1rem 1.25rem;
+      }
+
+      .unit-title {
+        font-weight: 700;
+        font-size: 1.05rem;
+        margin-bottom: 0.85rem;
+        color: var(--ink);
+        letter-spacing: 0.01em;
+      }
+
+      #unitLinks, #sectionLinks, #altUnitLinks {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      #sectionLinks { margin-top: 0.75rem; }
+
+      #unitLinks div,
+      #sectionLinks div,
+      #altUnitLinks div {
+        background: #edf2ff;
+        border: 1px solid #cfe0ff;
+        border-radius: 12px;
+        min-height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem 0.75rem;
+        transition: 0.2s ease;
+      }
+
+      #unitLinks div.selected,
+      #sectionLinks div.selected,
+      #altUnitLinks div.selected {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+      }
+
+      #unitLinks a,
+      #sectionLinks a,
+      #altUnitLinks a {
+        text-decoration: none;
+        color: var(--ink);
+        font-weight: 600;
+      }
+
+      #sectionLinks div { flex: 1 1 160px; }
+
+      #practiceArea { padding: clamp(1rem, 2vw, 1.75rem); }
+
+      #practicePane {
+        border-radius: 18px;
+        border: 1px solid var(--line);
+        background: rgba(248,250,252,0.96);
+        padding: 1rem;
+      }
+
+      #target {
+        min-height: 200px;
+        margin: 0 0 1rem;
+        background: #f9fafc;
+        border: 2px solid rgba(24,34,51,0.12);
+        border-radius: 16px;
+        padding: 1.2rem 1rem;
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+        font-size: clamp(1.15rem, 2vw, 2.2rem);
+        line-height: 1.65;
+        letter-spacing: 0.015em;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+
+      .targetChar {
+        display: inline-block;
+        padding: 0 0.12em;
+        border-radius: 0.25em;
+        border: 2px solid #3d4c66;
+        background: rgba(40,103,255,0.08);
+        color: #0d1b2a;
+      }
+
+      .error #target { background: #fff3f3; }
+      .retake #target { background: #fff8eb; }
+      .success #target { background: #eefcf3; }
+
+      #feedback {
+        display: grid;
+        grid-template-columns: 1fr 1.5fr 1fr;
+        gap: 1rem;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      #report, #score {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+
+      #score { text-align: right; }
+
+      #status {
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--accent-strong);
+      }
+
+      .ready #status { color: var(--success); }
+      .error #status { color: var(--error); }
+      .retake #status { color: var(--warning); }
+      .success #status { color: var(--success); }
+
+      #progress {
+        display: flex;
+        flex-direction: column;
+        gap: 0.45rem;
+      }
+
+      progress {
+        width: 100%;
+        height: 12px;
+        border-radius: 999px;
+      }
+
+      #input {
+        width: 100%;
+        border: 2px solid #d9e1f0;
+        background: #fff;
+        border-radius: 14px;
+        min-height: 58px;
+        padding: 0.9rem 1rem;
+        font-size: 1rem;
+        outline: none;
+        transition: 0.18s ease;
+      }
+
+      #input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 4px rgba(40,103,255,0.12);
+      }
+
+      .error #input { border-color: var(--error); background: #fff5f5; }
+      .retake #input { border-color: var(--warning); background: #fffaf0; }
+      .success #input { border-color: var(--success); background: #f2fdf6; }
+
+      #controlRow {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.75rem;
+        margin-top: 1rem;
+        flex-wrap: wrap;
+      }
+
+      #advice, #restart {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        border-radius: 12px;
+        border: 1px solid var(--line);
+        padding: 0.7rem 1rem;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      #advice {
+        text-decoration: none;
+        background: linear-gradient(135deg, #eef4ff, #edf7ff);
+        color: var(--ink);
+        visibility: hidden;
+      }
+
+      #restart {
+        background: #fff;
+        color: var(--ink);
+        visibility: hidden;
+      }
+
+      #guidePane {
+        padding: 1rem 1.25rem 1.5rem;
+        border-top: 1px solid var(--line);
+      }
+
+      #guideLink {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      #guideText {
+        margin-top: 0.95rem;
+        padding: 1rem 1.1rem;
+        border-radius: 14px;
+        background: linear-gradient(180deg, #f7f9ff, #eef4ff);
+        border: 1px solid var(--line);
+        color: var(--muted);
+      }
+
+      footer {
+        color: #eaf1ff;
+        background: rgba(10, 17, 30, 0.42);
+        border-top: 1px solid rgba(255,255,255,0.08);
+      }
+
+      .footer-wrap {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1.2rem 1.5rem 1.6rem;
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      footer a {
+        color: #dfeaff;
+        text-decoration: none;
+      }
+
+      footer p {
+        margin: 0;
+        color: rgba(223,234,255,0.88);
+      }
+
+      @media (max-width: 720px) {
+        .brand-wrap, .footer-wrap {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        #feedback { grid-template-columns: 1fr; }
+        #score { text-align: left; }
+        main { padding: 1rem; }
+      }
+    </style>
+
+    <script>
+      let unitLinks, sectionLinks, altUnitLinks
+      let unitTitle
+      let guideLink, guideText
+      let practiceArea, practicePane
+      let target, input
+      let status, remark, advice
+      let progressBar, progressPercent, restart
+      let speed, error, icon
+      let altDialog, altMessage
+
+      let state
+      let targetText
+      let errors
+      let startTime
+
+      const LOGGING = false
+      const TARGET_LEN = 25
+
+      const BEGIN_STATE = 'BEGIN_STATE'
+      const RUNNING_STATE = 'RUNNING_STATE'
+      const ERROR_STATE = 'ERROR_STATE'
+      const RETAKE_STATE = 'RETAKE_STATE'
+      const SUCCESS_STATE = 'SUCCESS_STATE'
+
+      const JOY_ICON = '(\uff61\u0298\u203f\u0298\uff61)'
+      const HAPPY_ICON = '(\u0298\u203f\u0298)'
+      const UNHAPPY_ICON = '(\u2299_\u2299)'
+      const SAD_ICON = '(\u2299\u2054\u2299)'
+
+      function safeStorageGet (key) {
+        try { return window.localStorage.getItem(key) } catch (e) { return null }
+      }
+
+      function safeStorageSet (key, value) {
+        try { window.localStorage.setItem(key, value) } catch (e) {}
+      }
+
+      function init () {
+        unitLinks = document.getElementById('unitLinks')
+        sectionLinks = document.getElementById('sectionLinks')
+        altUnitLinks = document.getElementById('altUnitLinks')
+        unitTitle = document.getElementById('unitTitle')
+        guideLink = document.getElementById('guideLink')
+        guideText = document.getElementById('guideText')
+        practiceArea = document.getElementById('practiceArea')
+        practicePane = document.getElementById('practicePane')
+        target = document.getElementById('target')
+        input = document.getElementById('input')
+        status = document.getElementById('status')
+        remark = document.getElementById('remark')
+        advice = document.getElementById('advice')
+        progressBar = document.getElementById('progressBar')
+        progressPercent = document.getElementById('progressPercent')
+        restart = document.getElementById('restart')
+        speed = document.getElementById('speed')
+        error = document.getElementById('error')
+        icon = document.getElementById('icon')
+        altDialog = document.getElementById('altDialog')
+        altMessage = document.getElementById('altMessage')
+
+        if (window.location.hash === '' && safeStorageGet('unit') !== null && safeStorageGet('unit') !== '#1') {
+          window.location.hash = safeStorageGet('unit')
+        }
+
+        setupLesson()
+
+        input.addEventListener('keydown', delayedEvaluate)
+        input.addEventListener('keyup', evaluate)
+        guideLink.addEventListener('click', toggleGuide)
+        restart.addEventListener('click', restartLesson)
+        advice.addEventListener('click', handleAdviceClick)
+        window.addEventListener('hashchange', setupLesson)
+      }
+
+      function setupLesson () {
+        const alt = getAlt()
+        const [unit, section] = getLesson()
+
+        if (unit > UNITS.main.length || section > Object.keys(pickUnit(unit, alt).sections).length) {
+          window.location.hash = '#'
+          return
+        }
+
+        state = BEGIN_STATE
+        errors = 0
+        input.value = ''
+
+        showUnitTitle(unit, section, alt)
+        showUnitLinks(unit, alt)
+        showSectionLinks(unit, section, alt)
+        targetText = getTargetText(unit, section, alt)
+        guideText.innerHTML = pickUnit(unit, alt).guide
+        showHideAltLinks(unit, alt)
+        hideGuide()
+        evaluate()
+        unitLinks.style.display = 'inline-block'
+        practiceArea.style.display = 'inline-block'
+        input.focus()
+        safeStorageSet('unit', sectionHref(unit, section))
+      }
+
+      function restartLesson (e) {
+        if (e) e.preventDefault()
+        setupLesson()
+      }
+
+      function handleAdviceClick (e) {
+        e.preventDefault()
+        const action = advice.dataset.action
+        if (action === 'restart') { setupLesson(); return }
+        if (action === 'next') {
+          const href = advice.getAttribute('href')
+          if (href && href !== '#') { window.location.hash = href }
+        }
+      }
+
+      function getAlt () { return safeStorageGet('alt') === 'yes' }
+
+      function getLesson () {
+        let unit = 1
+        let section = 1
+        if (window.location.hash.length > 0) {
+          const fragmentID = window.location.hash.slice(1)
+          const tokens = fragmentID.split('.')
+          unit = parseInt(tokens[0], 10)
+          if (tokens.length > 1) section = parseInt(tokens[1], 10)
+        }
+        if (Number.isNaN(unit)) unit = 1
+        if (Number.isNaN(section)) section = 1
+        return [unit, section]
+      }
+
+      function altUnitAvailable (m) {
+        return m >= UNITS.altStart && m < UNITS.altStart + UNITS.alt.length
+      }
+
+      function showUnitTitle (unit, section, alt) {
+        const title = pickUnit(unit, alt).title
+        unitTitle.textContent = `Unit ${unit}.${section} [${title}]`
+      }
+
+      function showUnitLinks (unit, alt) {
+        unitLinks.replaceChildren()
+        for (let i = 1; i <= UNITS.main.length; i++) {
+          const div = boxedLink('Unit ' + i, '#' + i, i === unit)
+          div.title = pickUnit(i, alt).title
+          unitLinks.append(div)
+        }
+      }
+
+      function showSectionLinks (unit, section, alt) {
+        const sections = pickUnit(unit, alt).sections
+        const titles = Object.keys(sections)
+        const len = titles.length
+        sectionLinks.replaceChildren()
+        for (let i = 1; i <= len; i++) {
+          const href = '#' + unit + '.' + i
+          const selected = (i === section)
+          const div = boxedLink(titles[i - 1], href, selected)
+          div.style.width = (95 / len) + '%'
+          sectionLinks.append(div)
+        }
+      }
+
+      function showHideAltLinks (unit, alt) {
+        if (altUnitAvailable(unit)) {
+          const hash = window.location.hash
+          const mainLink = boxedLink(UNITS.mainLabel, hash, !alt)
+          const altLink = boxedLink(UNITS.altLabel, hash, alt)
+          mainLink.addEventListener('click', toggleAlt)
+          altLink.addEventListener('click', toggleAlt)
+          altUnitLinks.replaceChildren(mainLink, altLink)
+          altUnitLinks.style.display = 'block'
+        } else {
+          altUnitLinks.style.display = 'none'
+        }
+      }
+
+      function toggleAlt (e) {
+        if (e.target.className === 'selected') return
+        const alt = getAlt()
+        const msg = alt ? UNITS.mainConfirmMsg : UNITS.altConfirmMsg
+        const newAlt = alt ? 'no' : 'yes'
+        altMessage.innerHTML = msg
+        altDialog.returnValue = 'no'
+        if (typeof altDialog.showModal === 'function') {
+          altDialog.showModal()
+          altDialog.onclose = function () {
+            if (altDialog.returnValue === 'yes') {
+              safeStorageSet('alt', newAlt)
+              setupLesson()
+            }
+          }
+        } else {
+          safeStorageSet('alt', newAlt)
+          setupLesson()
+        }
+      }
+
+      function getTargetText (unit, section, alt) {
+        const sections = pickUnit(unit, alt).sections
+        const texts = Object.values(sections)
+        const text = texts[section - 1].replaceAll('  ', ' ')
+        return text
+      }
+
+      function updateTargetText (targetIndex) {
+        const sideLen = (TARGET_LEN - 1) / 2
+        const textLen = targetText.length
+        let startIndex
+        if (targetIndex <= sideLen) {
+          startIndex = 0
+        } else if (targetIndex > sideLen && targetIndex < textLen - sideLen - 1) {
+          startIndex = targetIndex - sideLen
+        } else {
+          startIndex = Math.max(0, textLen - TARGET_LEN)
+        }
+        const endIndex = startIndex + TARGET_LEN
+        const prefix = visual(targetText.substring(startIndex, targetIndex))
+        const middle = visual(targetText.charAt(targetIndex))
+        const suffix = visual(targetText.substring(targetIndex + 1, endIndex))
+        const middleSpan = document.createElement('span')
+        middleSpan.textContent = middle
+        middleSpan.className = 'targetChar'
+        target.replaceChildren(prefix, middleSpan, suffix)
+      }
+
+      function updateMetrics (goodChars, errorRate) {
+        const progressValue = Math.round(100 * goodChars / targetText.length)
+        progressBar.value = progressValue
+        progressPercent.textContent = progressValue + '%'
+
+        const elapsedTime = new Date().getTime() - startTime
+        let wpm
+        if (goodChars <= 1 || elapsedTime === 0) { wpm = 0 }
+        else { wpm = Math.round(60000 * (goodChars - 1) / 5 / elapsedTime) }
+        speed.textContent = wpm + ' wpm'
+
+        const roundedErrorRate = Math.round(errorRate)
+        if (roundedErrorRate === Number.POSITIVE_INFINITY) {
+          error.textContent = '\u221e%'
+        } else {
+          error.textContent = roundedErrorRate + '%'
+        }
+
+        if (roundedErrorRate === 0) {
+          icon.textContent = wpm >= 40 ? JOY_ICON : HAPPY_ICON
+        } else if (roundedErrorRate > 0 && roundedErrorRate <= 2) {
+          icon.textContent = UNHAPPY_ICON
+        } else {
+          icon.textContent = SAD_ICON
+        }
+      }
+
+      function boxedLink (text, href, selected) {
+        const div = document.createElement('div')
+        if (selected) {
+          div.textContent = text
+          div.className = 'selected'
+        } else {
+          const anchor = document.createElement('a')
+          anchor.textContent = text
+          anchor.href = href
+          div.append(anchor)
+        }
+        return div
+      }
+
+      function pickUnit (unit, alt) {
+        if (altUnitAvailable(unit) && alt) {
+          return UNITS.alt[unit - UNITS.altStart]
+        }
+        return UNITS.main[unit - 1]
+      }
+
+      function nextSectionHref () {
+        const [unit, section] = getLesson()
+        const alt = getAlt()
+        const sections = pickUnit(unit, alt).sections
+        const titles = Object.keys(sections)
+        if (unit === UNITS.main.length && section === titles.length) { return null }
+        if (section === titles.length) { return sectionHref(unit + 1, 1) }
+        return sectionHref(unit, section + 1)
+      }
+
+      function sectionHref (unit, section) {
+        return section === 1 ? '#' + unit : '#' + unit + '.' + section
+      }
+
+      function toggleGuide (e) {
+        e.preventDefault()
+        if (guideText.style.display === 'none') { showGuide() } else { hideGuide() }
+      }
+
+      function showGuide () {
+        guideText.style.display = ''
+        guideLink.textContent = 'Hide Guide'
+      }
+
+      function hideGuide () {
+        guideText.style.display = 'none'
+        guideLink.textContent = 'Guide'
+      }
+
+      function visual (s) {
+        return s.replace(/ /g, '\u00a0').replace(/\n/g, '\u23ce')
+      }
+
+      function delayedEvaluate () { setTimeout(evaluate, 2) }
+
+      function evaluate () {
+        if (state === BEGIN_STATE) {
+          if (input.value.length > 0) {
+            startTime = new Date().getTime()
+            state = RUNNING_STATE
+          }
+          applyState()
+        }
+
+        const goodChars = commonPrefix(targetText, input.value)
+        updateTargetText(goodChars)
+
+        if (goodChars === input.value.length) {
+          if (state === ERROR_STATE) {
+            state = RUNNING_STATE
+            applyState()
+          }
+        } else {
+          if (state === RUNNING_STATE) {
+            state = ERROR_STATE
+            errors++
+            applyState()
+          }
+          processSpecialCommands(goodChars)
+        }
+
+        const errorRate = calcErrorRate(goodChars)
+        updateMetrics(goodChars, errorRate)
+
+        if (goodChars === targetText.length) {
+          state = Math.round(errorRate) === 0 ? SUCCESS_STATE : RETAKE_STATE
+          applyState()
+        }
+      }
+
+      function commonPrefix (a, b) {
+        const minLength = Math.min(a.length, b.length)
+        let i
+        for (i = 0; i < minLength; i++) {
+          if (a[i] !== b[i]) return i
+        }
+        return i
+      }
+
+      function calcErrorRate (goodChars) {
+        if (goodChars > 0) { return 100 * errors / goodChars }
+        if (errors > 0) { return Number.POSITIVE_INFINITY }
+        return 0
+      }
+
+      function applyState () {
+        let href
+        switch (state) {
+          case BEGIN_STATE:
+            input.disabled = false
+            practicePane.className = 'ready'
+            status.textContent = 'READY'
+            remark.textContent = ''
+            advice.style.visibility = 'hidden'
+            restart.style.visibility = 'hidden'
+            break
+
+          case RUNNING_STATE:
+            practicePane.className = ''
+            status.textContent = ''
+            restart.style.visibility = 'visible'
+            break
+
+          case ERROR_STATE:
+            practicePane.className = 'error'
+            status.textContent = 'ERROR!'
+            break
+
+          case RETAKE_STATE:
+            input.disabled = true
+            practicePane.className = 'retake'
+            status.textContent = 'COMPLETED'
+            remark.textContent = 'Reduce error'
+            advice.textContent = 'Try again'
+            advice.href = '#'
+            advice.dataset.action = 'restart'
+            advice.style.visibility = 'visible'
+            advice.focus()
+            break
+
+          case SUCCESS_STATE:
+            input.disabled = true
+            practicePane.className = 'success'
+            remark.textContent = 'Well done!'
+            status.textContent = 'COMPLETED'
+            href = nextSectionHref()
+            if (href !== null) {
+              advice.textContent = 'Next lesson'
+              advice.href = href
+              advice.dataset.action = 'next'
+              advice.style.visibility = 'visible'
+              advice.focus()
+            } else {
+              advice.textContent = 'Completed'
+              advice.href = '#'
+              advice.dataset.action = 'restart'
+              advice.style.visibility = 'visible'
+            }
+            break
+        }
+      }
+
+      function processSpecialCommands (goodChars) {
+        const s = input.value
+        if (s.endsWith('restart') || s.endsWith('reset') || s.endsWith('rst')) {
+          setupLesson()
+        } else if (s.endsWith('fix') || s.endsWith('xxx')) {
+          input.value = input.value.substring(0, goodChars)
+          evaluate()
+        }
+      }
+
+      function log () {
+        if (LOGGING) {
+          const args = Array.prototype.slice.call(arguments)
+          console.log('[log] ' + args.join(' '))
+        }
+      }
+
+      window.addEventListener('load', init)
+
+      const UNITS = {
+        mainLabel: 'MMUH',
+        mainConfirmMsg: '<h3>Switch to the alternate lesson set?</h3><p>You are about to switch the lesson set for Cloud Ray Tech Tutor by MMUH. Continue?</p>',
+        altConfirmMsg: '<h3>Switch to the main lesson set?</h3><p>You are about to switch back to the main lesson set for Cloud Ray Tech Tutor by MMUH. Continue?</p>',
+        altLabel: 'Alt',
+        altStart: 999,
+        main: [
+          {
+            title: 'Greetings and Support',
+            guide: '<p>Type these useful greetings and supportive phrases.</p>',
+            sections: {
+              Greetings: 'Hello dear. Hi there. How are you? How may I assist you? Sure, please allow me a minute to connect with the energies and get back with the insights. Thanks for waiting, dear. Thanks for the time given. Hello. How are you? Sure. I would love to help you. I am sorry to hear that. Hi there! How are you doing today? Sure, my dear. At the same time, I understand.',
+              Support: 'Please provide your name and date of birth. Please provide both of your names and date of births. Please allow me a moment here to tap into the energies and revert with the insights. Hey! How can I help you? What would you like to know? Give me a minute to connect, dear. Thanks for waiting. Thanks for the time given.',
+              Welcome: 'Welcome back, Love. Let me continue the readings from where we left off. Sure, my dear, I am all ears. I understand your curiosity, my dear. I can understand the pain and agony you are going through. Let me be honest here, my dear: this is her path and her consequence, not something you need to carry. This is his path and his consequences, not something you need to carry. Welcome again. Yes, let me continue, dear.'
+            }
+          },
+          {
+            title: 'Helpful Sentences',
+            guide: '<p>Practice complete sentences for clear communication.</p>',
+            sections: {
+              ClientDetails: 'Hey! How can I help you? What would you like to know? Yes. Is there anything specific you want me to focus on, like career or love guidance? I am here to help you attain clarity. Your name and date of birth? Date of birth. Okay. Give me a minute to connect with the energies. Thanks for waiting, dear.',
+              CheckingIn: 'Hello. How are you doing today? I am good. He texted me this Monday, just checking in, asked how my week was, and he said his week was long and told me he took his dog out to the park. I texted him back and said good, and told him to stay warm at his work because people get sick.',
+              Patience: 'Hey friend. How are you today? Thanks for the details. I will surely check it for you. I will check this for you. Let me check this for you. Kindly allow me a moment here to tune into the energies. I appreciate your patience, dear. Hello, my dear. I am doing absolutely good; thank you for asking me.'
+            }
+          },
+          {
+            title: 'Connection Passages',
+            guide: '<p>Type these longer passages carefully and smoothly.</p>',
+            sections: {
+              Cosmos: 'As I tuned into the energies, here is what I am sensing. I see that he is safe and managing okay; the trip is busy and pulls him into family and obligations. But the quiet moments are where you surface for him, dear, and I sense you have been on his mind in a way that surprises him. This distance has not cooled what he feels; if anything, it has clarified it, because being away from you has shown him how much of his daily rhythm you had become.',
+              Reflection: 'What I do sense shifting now is a man beginning to think beyond the trip of coming back, of what he wants to build when he returns, and of you inside that picture. He will still be quiet in communication, dear, because he struggles to put this into words, but do not read his silence as fading feelings; it is him sorting himself out. My dear, I do sense that when he returns, he will try to meet you. There is a high possibility of that, and I sense it clearly.',
+              Message: 'My dear, the quote he put up, "A mind fixated on one person isolates one from the rest of the world," is incredibly telling, and it perfectly mirrors the energy I am sensing. By posting this while sending a very clear subconscious message. You are the one person his mind is fixated on. As he sits in office surrounded by strangers and heading into a completely different world, his thoughts are not on his surroundings or the work; they are completely consumed by you.'
+            }
+          },
+          {
+            title: 'Long Passage Practice',
+            guide: '<p>Type the full passage without stopping. Focus on accuracy first, then speed.</p>',
+            sections: {
+              Session: 'The energy surrounding your session with Marcus is incredibly warm and forward-moving. When you ask if he feels the connection and wants to see you soon, the answer is a resounding yes. Marcus is currently feeling a strong pull toward you and is actively thinking about the next time he can be in your presence. There is a sense of anticipation on his end; he genuinely enjoys your company.',
+              Clarity: 'Hi there. Alright, dear, let me check on that. Kindly allow me a moment here to tune into the energies. I appreciate your patience, dear. Dear, as I connected with Archer\'s energy over these past few days, what I pick up is a noticeable shift from that restless, internal frustration into something much more active and deliberate; the silence has begun to crack.'
+            }
+          }
+        ],
+        alt: []
+      }
+    </script>
+  </head>
+  <body>
+    <header>
+      <div class="brand-wrap">
+        <div class="brand">
+          Cloud Ray Tech Tutor by MMUH
+          <small>Typing Practice</small>
+        </div>
+        <div class="top-actions">
+          <span class="chip">Passage drills</span>
+          <span class="chip">Accuracy first</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="panel">
+        <div class="toolbar">
+          <div id="unitTitle" class="unit-title"></div>
+          <div id="unitLinks"></div>
+          <div id="sectionLinks"></div>
+          <div id="altUnitLinks" style="display:none"></div>
+        </div>
+
+        <div id="practiceArea">
+          <div id="practicePane" class="ready">
+            <div id="target" aria-live="polite"></div>
+
+            <div id="feedback">
+              <div id="report">
+                <span id="status">READY</span>
+                <span id="remark"></span>
+              </div>
+
+              <div id="progress">
+                <progress id="progressBar" max="100" value="0"></progress>
+                <span id="progressPercent">0%</span>
+              </div>
+
+              <div id="score">
+                <span id="speed">0 wpm</span>
+                <span id="error">0%</span>
+                <span id="icon">(◡‿◡)</span>
+              </div>
+            </div>
+
+            <input id="input" type="text" autocomplete="off" spellcheck="false" aria-label="Practice text" />
+
+            <div id="controlRow">
+              <a id="advice" href="#">Try again</a>
+              <button id="restart" type="button">Restart</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="guidePane">
+          <a id="guideLink" href="#">Guide</a>
+          <div id="guideText" style="display:none"></div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-wrap">
+        <nav>
+          <a href="#">Home</a>
+          <a href="#">Lessons</a>
+          <a href="#">Progress</a>
+        </nav>
+        <p>Cloud Ray Tech Tutor by MMUH</p>
+      </div>
+    </footer>
+
+    <dialog id="altDialog">
+      <div id="altMessage"></div>
+      <form method="dialog">
+        <button value="yes">Yes</button>
+        <button value="no">No</button>
+      </form>
+    </dialog>
+
+    <noscript>
+      <p id="noscript">JavaScript is required to use Cloud Ray Tech Tutor by MMUH.</p>
+    </noscript>
+  </body>
 </html>
+===END===
