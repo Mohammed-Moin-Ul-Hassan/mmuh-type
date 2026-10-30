@@ -1,6 +1,3 @@
-Absolutely. Use **MMUH Type** as the project name and **MMUH (Modern Multifaceted Universal Hub)** as the maintainer. Replace the repository’s `README.md` with this. Keep the original `LICENCE.md` file and copyright notice in the repository; the README credits the QuickQWERTY project it’s based on.
-
-```markdown
 # MMUH Type
 
 **A language-learning typing tutor by MMUH — Modern Multifaceted Universal Hub**
