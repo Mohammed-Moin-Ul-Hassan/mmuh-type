@@ -39,10 +39,10 @@
         font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       }
 
-      body { line-height: 1.5; }
+      body { line-height: 1.5; scroll-behavior: smooth; }
 
-      a:link, a:visited { color: #1e52d9; }
-      a:hover { color: #163db0; }
+      a:link, a:visited { color: #1e52d9; text-decoration: none; }
+      a:hover { color: #163db0; text-decoration: underline; }
 
       header {
         color: #edf3ff;
@@ -130,7 +130,6 @@
         color: var(--ink);
       }
 
-      /* ITEM 6: units horizontal — 4 in one row on desktop */
       #unitLinks {
         display: flex;
         flex-direction: row;
@@ -186,7 +185,6 @@
 
       #practiceArea { padding: clamp(1rem, 2vw, 1.75rem); }
 
-      /* ITEM 8: Monkeytype-style — borderless, centered, mono, caret */
       #practicePane {
         border-radius: 18px;
         border: 1px solid var(--line);
@@ -235,7 +233,6 @@
       }
       @keyframes blink { 50% { opacity: 0; } }
 
-      /* ITEM 8: hide the native input — we drive it programmatically */
       #input {
         position: absolute;
         opacity: 0;
@@ -321,7 +318,6 @@
         color: var(--muted);
       }
 
-      /* ITEM 3b: announcements */
       #announcements {
         margin-top: 1.5rem;
         background: rgba(255,255,255,0.94);
@@ -353,6 +349,7 @@
       .announce-item:hover {
         transform: translateY(-1px);
         box-shadow: 0 6px 18px rgba(40,103,255,0.18);
+        text-decoration: none;
       }
       .announce-item .arrow { color: var(--accent); font-weight: 800; }
 
@@ -374,6 +371,7 @@
       }
       footer nav { display: flex; flex-wrap: wrap; gap: 1rem; }
       footer a { color: #dfeaff; text-decoration: none; }
+      footer a:hover { text-decoration: underline; }
       footer p { margin: 0; color: rgba(223,234,255,0.88); }
 
       @media (max-width: 720px) {
@@ -397,7 +395,7 @@
           <small>Typing Practice</small>
         </div>
         <div class="top-actions" style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-          <button class="chip-btn" id="drillBtn" type="button">Passage drills</button>
+          <button class="chip-btn active" id="drillBtn" type="button">Passage drills</button>
           <button class="chip-btn" id="accuracyBtn" type="button">Accuracy first</button>
         </div>
       </div>
@@ -406,9 +404,9 @@
     <main>
       <div id="warningBanner" role="alert"></div>
 
-      <div class="panel">
+      <div class="panel" id="typing-panel">
         <div class="toolbar">
-          <div id="unitTitle" class="unit-title"></div>
+          <div id="unitTitle" class="unit-title">Loading...</div>
           <div id="unitLinks"></div>
           <div id="sectionLinks"></div>
         </div>
@@ -457,9 +455,9 @@
     <footer>
       <div class="footer-wrap">
         <nav>
-          <a href="#">Home</a>
-          <a href="#">Lessons</a>
-          <a href="#">Progress</a>
+          <a href="#typing-panel">Home</a>
+          <a href="#typing-panel">Lessons</a>
+          <a href="#typing-panel">Progress</a>
         </nav>
         <p>Made with &hearts; by MMUH</p>
       </div>
@@ -473,11 +471,11 @@
       /* ---------------- State ---------------- */
       let UNITS = null;
       let unitLinks, sectionLinks, unitTitle, guideLink, guideText;
-      let practiceArea, practicePane, target, input;
+      let practicePane, target, input;
       let status, remark, advice, progressBar, progressPercent, restart, speed, errorEl, icon;
       let warningBanner;
 
-      let state, targetText, targetChars, cursor, errors, startTime, keystrokes;
+      let state, targetText, targetChars, cursor, errors, startTime;
       let mode = 'flow'; // 'flow' | 'accuracy'
 
       const BEGIN_STATE = 'BEGIN_STATE';
@@ -494,7 +492,7 @@
       function safeStorageGet (key) { try { return window.localStorage.getItem(key); } catch (e) { return null; } }
       function safeStorageSet (key, value) { try { window.localStorage.setItem(key, value); } catch (e) {} }
 
-      /* ---------------- Boot & Validation (ITEM 4) ---------------- */
+      /* ---------------- Boot & Validation ---------------- */
       function boot () {
         warningBanner = document.getElementById('warningBanner');
         const problems = [];
@@ -561,7 +559,6 @@
         unitTitle = document.getElementById('unitTitle');
         guideLink = document.getElementById('guideLink');
         guideText = document.getElementById('guideText');
-        practiceArea = document.getElementById('practiceArea');
         practicePane = document.getElementById('practicePane');
         target = document.getElementById('target');
         input = document.getElementById('input');
@@ -579,19 +576,12 @@
           window.location.hash = safeStorageGet('unit');
         }
 
-        // ITEM 3a: real buttons
         document.getElementById('drillBtn').addEventListener('click', () => setMode('flow'));
         document.getElementById('accuracyBtn').addEventListener('click', () => setMode('accuracy'));
-        setMode('flow', true);
-
+        
         setupLesson();
 
-        // ITEM 5: listen on the hidden input; never block advance
         input.addEventListener('input', onInput);
-        input.addEventListener('keydown', (e) => {
-          if (e.key === 'Tab') return; // allow tab nav
-          if (e.key === 'Backspace') { /* handled by browser */ }
-        });
         target.addEventListener('click', () => input.focus());
 
         guideLink.addEventListener('click', toggleGuide);
@@ -600,13 +590,11 @@
         window.addEventListener('hashchange', setupLesson);
       }
 
-      function setMode (m, silent) {
+      function setMode (m) {
         mode = m;
         document.getElementById('drillBtn').classList.toggle('active', m === 'flow');
         document.getElementById('accuracyBtn').classList.toggle('active', m === 'accuracy');
-        if (!silent) {
-          setupLesson();
-        }
+        setupLesson();
       }
 
       function setupLesson () {
@@ -619,7 +607,6 @@
         state = BEGIN_STATE;
         errors = 0;
         cursor = 0;
-        keystrokes = 0;
         startTime = 0;
         input.value = '';
 
@@ -706,7 +693,6 @@
         return div;
       }
 
-      /* ---------------- ITEM 7 + 8: full passage, caret, per-char coloring ---------------- */
       function renderTarget () {
         const frag = document.createDocumentFragment();
         for (let i = 0; i < targetChars.length; i++) {
@@ -733,7 +719,6 @@
         }
       }
 
-      /* ---------------- ITEM 5: flow mode — never block, always count ---------------- */
       function onInput () {
         if (state === BEGIN_STATE && input.value.length > 0) {
           startTime = new Date().getTime();
@@ -742,17 +727,15 @@
         }
 
         const typed = input.value;
-        keystrokes = typed.length;
-
-        // count mismatches in the typed prefix vs target
         let newCursor = 0;
         let newErrors = 0;
         const max = Math.min(typed.length, targetChars.length);
+        
         for (let i = 0; i < max; i++) {
           if (typed[i] === targetChars[i]) newCursor = i + 1;
           else newErrors++;
         }
-        // in flow mode cursor moves to end of typed text (or target end)
+        
         if (mode === 'flow') {
           newCursor = Math.min(typed.length, targetChars.length);
         }
@@ -761,4 +744,138 @@
           state = ERROR_STATE;
           applyState();
         } else if (state === ERROR_STATE) {
-          state = RUNNING
+          state = RUNNING_STATE;
+          applyState();
+        }
+
+        errors = newErrors;
+        cursor = newCursor;
+        
+        highlightCursor();
+        
+        const errorRate = cursor > 0 ? 100 * errors / cursor : 0;
+        updateMetrics(cursor, errorRate);
+
+        if (cursor >= targetChars.length) {
+          state = Math.round(errorRate) === 0 ? SUCCESS_STATE : RETAKE_STATE;
+          applyState();
+        }
+      }
+
+      function updateMetrics (goodChars, errorRate) {
+        const progressValue = Math.round(100 * goodChars / targetChars.length);
+        progressBar.value = progressValue;
+        progressPercent.textContent = progressValue + '%';
+
+        const elapsedTime = startTime ? new Date().getTime() - startTime : 0;
+        let wpm = 0;
+        if (goodChars > 1 && elapsedTime > 0) { 
+          wpm = Math.round(60000 * (goodChars - 1) / 5 / elapsedTime);
+        }
+        speed.textContent = wpm + ' wpm';
+
+        const roundedErrorRate = Math.round(errorRate);
+        if (roundedErrorRate === Number.POSITIVE_INFINITY) {
+          errorEl.textContent = '\u221e%';
+        } else {
+          errorEl.textContent = roundedErrorRate + '%';
+        }
+
+        if (roundedErrorRate === 0) {
+          icon.textContent = wpm >= 40 ? JOY_ICON : HAPPY_ICON;
+        } else if (roundedErrorRate > 0 && roundedErrorRate <= 2) {
+          icon.textContent = UNHAPPY_ICON;
+        } else {
+          icon.textContent = SAD_ICON;
+        }
+      }
+
+      function nextSectionHref () {
+        const [unit, section] = getLesson();
+        const sections = pickUnit(unit).sections;
+        const titles = Object.keys(sections);
+        if (unit === UNITS.main.length && section === titles.length) { return null; }
+        if (section === titles.length) { return sectionHref(unit + 1, 1); }
+        return sectionHref(unit, section + 1);
+      }
+
+      function sectionHref (unit, section) {
+        return section === 1 ? '#' + unit : '#' + unit + '.' + section;
+      }
+
+      function toggleGuide (e) {
+        e.preventDefault();
+        if (guideText.style.display === 'none') { showGuide(); } else { hideGuide(); }
+      }
+
+      function showGuide () {
+        guideText.style.display = '';
+        guideLink.textContent = 'Hide Guide';
+      }
+
+      function hideGuide () {
+        guideText.style.display = 'none';
+        guideLink.textContent = 'Guide';
+      }
+
+      function applyState () {
+        let href;
+        switch (state) {
+          case BEGIN_STATE:
+            input.disabled = false;
+            practicePane.className = 'ready';
+            status.textContent = 'READY';
+            remark.textContent = '';
+            advice.style.visibility = 'hidden';
+            restart.style.visibility = 'hidden';
+            break;
+
+          case RUNNING_STATE:
+            practicePane.className = '';
+            status.textContent = '';
+            restart.style.visibility = 'visible';
+            break;
+
+          case ERROR_STATE:
+            practicePane.className = 'error';
+            status.textContent = 'ERROR!';
+            break;
+
+          case RETAKE_STATE:
+            input.disabled = true;
+            practicePane.className = 'retake';
+            status.textContent = 'COMPLETED';
+            remark.textContent = 'Reduce error';
+            advice.textContent = 'Try again';
+            advice.href = '#';
+            advice.dataset.action = 'restart';
+            advice.style.visibility = 'visible';
+            advice.focus();
+            break;
+
+          case SUCCESS_STATE:
+            input.disabled = true;
+            practicePane.className = 'success';
+            remark.textContent = 'Well done!';
+            status.textContent = 'COMPLETED';
+            href = nextSectionHref();
+            if (href !== null) {
+              advice.textContent = 'Next lesson';
+              advice.href = href;
+              advice.dataset.action = 'next';
+              advice.style.visibility = 'visible';
+              advice.focus();
+            } else {
+              advice.textContent = 'Completed';
+              advice.href = '#';
+              advice.dataset.action = 'restart';
+              advice.style.visibility = 'visible';
+            }
+            break;
+        }
+      }
+
+      window.addEventListener('load', boot);
+    </script>
+  </body>
+</html>
